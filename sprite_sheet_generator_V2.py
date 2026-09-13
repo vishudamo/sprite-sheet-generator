@@ -375,9 +375,13 @@ class SpriteSheetSettings(PropertyGroup):
     columns: IntProperty(name="Columns", default=10, min=1, max=50)
     
     use_front: BoolProperty(name="Front (0°)", default=True)
+    use_front_right: BoolProperty(name="Front-Right (45°)", default=True)
     use_right: BoolProperty(name="Right (90°)", default=True)
+    use_back_right: BoolProperty(name="Back-Right (135°)", default=True)
     use_back: BoolProperty(name="Back (180°)", default=True)
+    use_back_left: BoolProperty(name="Back-Left (225°)", default=True)
     use_left: BoolProperty(name="Left (270°)", default=True)
+    use_front_left: BoolProperty(name="Front-Left (315°)", default=True)
     
     flip_y: BoolProperty(
         name="Flip Y Axis",
@@ -459,10 +463,14 @@ class SPRITESHEET_OT_help(Operator):
         box.label(text="View Angles:", icon='ORIENTATION_VIEW')
 
         angles_info = [
-            "Front (0°)  - Default view",
+            "Front (0°) - Default view",
+            "Front-Right (45°) - Diagonal",
             "Right (90°) - Side view",
+            "Back-Right (135°) - Diagonal",
             "Back (180°) - Behind view",
+            "Back-Left (225°) - Diagonal",
             "Left (270°) - Other side",
+            "Front-Left (315°) - Diagonal",
         ]
 
         for info in angles_info:
@@ -733,9 +741,13 @@ class SPRITESHEET_OT_generate(Operator):
         # Get view angles
         view_angles = []
         if settings.use_front: view_angles.append(0)
+        if settings.use_front_right: view_angles.append(45)
         if settings.use_right: view_angles.append(90)
+        if settings.use_back_right: view_angles.append(135)
         if settings.use_back: view_angles.append(180)
+        if settings.use_back_left: view_angles.append(225)
         if settings.use_left: view_angles.append(270)
+        if settings.use_front_left: view_angles.append(315)
         
         if not view_angles:
             show_error(
@@ -744,7 +756,8 @@ class SPRITESHEET_OT_generate(Operator):
             )
             return {'CANCELLED'}
         
-        angle_names = {0: "front", 90: "right", 180: "back", 270: "left"}
+        angle_names = {0: "front", 45: "front_right", 90: "right", 135: "back_right",
+            180: "back", 225: "back_left", 270: "left", 315: "front_left"}
         
         print("\n" + "="*70)
         print(f"SPRITE SHEET GENERATOR v2.1 - ARMATURE ROTATION MODE")
@@ -1131,11 +1144,19 @@ class VIEW3D_PT_sprite_sheet(Panel):
         box = layout.box()
         box.label(text="View Angles (Armature Rotation):", icon='ORIENTATION_VIEW')
         
-        row = box.row(align=True)
-        row.prop(settings, "use_front", toggle=True)
-        row.prop(settings, "use_right", toggle=True)
-        row.prop(settings, "use_back", toggle=True)
-        row.prop(settings, "use_left", toggle=True)
+        col = box.column(align=True)
+        row = col.row(align=True)
+        row.prop(settings, "use_front_left", text="NW", toggle=True)
+        row.prop(settings, "use_front", text="N", toggle=True)
+        row.prop(settings, "use_front_right", text="NE", toggle=True)
+        row = col.row(align=True)
+        row.prop(settings, "use_left", text="W", toggle=True)
+        row.label(text="")
+        row.prop(settings, "use_right", text="E", toggle=True)
+        row = col.row(align=True)
+        row.prop(settings, "use_back_left", text="SW", toggle=True)
+        row.prop(settings, "use_back", text="S", toggle=True)
+        row.prop(settings, "use_back_right", text="SE", toggle=True)
         
         layout.separator()
         
