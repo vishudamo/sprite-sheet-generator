@@ -40,7 +40,7 @@ homepage_url = "https://github.com/GameSomeStudio/sprite-sheet-generator"
 support_url = "https://github.com/GameSomeStudio/sprite-sheet-generator/issues"
 bugtracker_url = "https://github.com/GameSomeStudio/sprite-sheet-generator/issues"
 
-copyright = "Copyright 2026 GameSome. Licensed under GPL-3.0-or-later."
+copyright = ["Copyright 2026 GameSome. Licensed under GPL-3.0-or-later."]
 
 license = [
     "GPL-3.0-or-later",
